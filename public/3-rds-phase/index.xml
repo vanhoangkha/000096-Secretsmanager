@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Using on RDS on Using AWS Secrets Manager with Amazon RDS and AWS Fargate</title>
+    <link>/3-rds-phase/</link>
+    <description>Recent content in Using on RDS on Using AWS Secrets Manager with Amazon RDS and AWS Fargate</description>
+    <generator>Hugo -- gohugo.io</generator><atom:link href="/3-rds-phase/index.xml" rel="self" type="application/rss+xml" />
+  </channel>
+</rss>

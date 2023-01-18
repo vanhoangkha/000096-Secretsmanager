@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Chuẩn bị tài nguyên on Sử dụng AWS Secrets Manager với Amazon RDS và AWS Fargate</title>
+    <link>/vi/1-build-phase/</link>
+    <description>Recent content in Chuẩn bị tài nguyên on Sử dụng AWS Secrets Manager với Amazon RDS và AWS Fargate</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 14 May 2020 00:38:32 +0700</lastBuildDate><atom:link href="/vi/1-build-phase/index.xml" rel="self" type="application/rss+xml" />
+  </channel>
+</rss>

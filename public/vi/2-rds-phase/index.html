@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="vi" class="js csstransforms3d">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="Hugo 0.99.1" />
+    <meta name="description" content="">
+<meta name="author" content="journeyoftheaverageguy@gmail.com">
+
+    <link rel="icon" href="/images/favicon.png" type="image/png">
+
+    <title>Sử dụng trên RDS :: Sử dụng AWS Secrets Manager với Amazon RDS và AWS Fargate</title>
+
+    
+    <link href="/css/nucleus.css?1657435499" rel="stylesheet">
+    <link href="/css/fontawesome-all.min.css?1657435499" rel="stylesheet">
+    <link href="/css/hybrid.css?1657435499" rel="stylesheet">
+    <link href="/css/featherlight.min.css?1657435499" rel="stylesheet">
+    <link href="/css/perfect-scrollbar.min.css?1657435499" rel="stylesheet">
+    <link href="/css/auto-complete.css?1657435499" rel="stylesheet">
+    <link href="/css/atom-one-dark-reasonable.css?1657435499" rel="stylesheet">
+    <link href="/css/theme.css?1657435499" rel="stylesheet">
+    <link href="/css/hugo-theme.css?1657435499" rel="stylesheet">
+    
+    <link href="/css/theme-workshop.css?1657435499" rel="stylesheet">
+    
+    
+
+    <script src="/js/jquery-3.3.1.min.js?1657435499"></script>
+
+    <style>
+      :root #header + #content > #left > #rlblock_left{
+          display:none !important;
+      }
+      
+    </style>
+    
+  </head>
+  <body class="" data-url="/vi/2-rds-phase/">
+    <nav id="sidebar" class="showVisitedLinks">
+
+
+
+  <div id="header-wrapper">
+    <div id="header">
+      <a id="logo" href="/">
+
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" width="30%"><defs><style>.cls-1{fill:#fff;}.cls-2{fill:#f90;fill-rule:evenodd;}</style></defs><title>AWS-Logo_White-Color</title><path class="cls-1" d="M14.09,10.85a4.7,4.7,0,0,0,.19,1.48,7.73,7.73,0,0,0,.54,1.19.77.77,0,0,1,.12.38.64.64,0,0,1-.32.49l-1,.7a.83.83,0,0,1-.44.15.69.69,0,0,1-.49-.23,3.8,3.8,0,0,1-.6-.77q-.25-.42-.51-1a6.14,6.14,0,0,1-4.89,2.3,4.54,4.54,0,0,1-3.32-1.19,4.27,4.27,0,0,1-1.22-3.2A4.28,4.28,0,0,1,3.61,7.75,6.06,6.06,0,0,1,7.69,6.46a12.47,12.47,0,0,1,1.76.13q.92.13,1.91.36V5.73a3.65,3.65,0,0,0-.79-2.66A3.81,3.81,0,0,0,7.86,2.3a7.71,7.71,0,0,0-1.79.22,12.78,12.78,0,0,0-1.79.57,4.55,4.55,0,0,1-.58.22l-.26,0q-.35,0-.35-.52V2a1.09,1.09,0,0,1,.12-.58,1.2,1.2,0,0,1,.47-.35A10.88,10.88,0,0,1,5.77.32,10.19,10.19,0,0,1,8.36,0a6,6,0,0,1,4.35,1.35,5.49,5.49,0,0,1,1.38,4.09ZM7.34,13.38a5.36,5.36,0,0,0,1.72-.31A3.63,3.63,0,0,0,10.63,12,2.62,2.62,0,0,0,11.19,11a5.63,5.63,0,0,0,.16-1.44v-.7a14.35,14.35,0,0,0-1.53-.28,12.37,12.37,0,0,0-1.56-.1,3.84,3.84,0,0,0-2.47.67A2.34,2.34,0,0,0,5,11a2.35,2.35,0,0,0,.61,1.76A2.4,2.4,0,0,0,7.34,13.38Zm13.35,1.8a1,1,0,0,1-.64-.16,1.3,1.3,0,0,1-.35-.65L15.81,1.51a3,3,0,0,1-.15-.67.36.36,0,0,1,.41-.41H17.7a1,1,0,0,1,.65.16,1.4,1.4,0,0,1,.33.65l2.79,11,2.59-11A1.17,1.17,0,0,1,24.39.6a1.1,1.1,0,0,1,.67-.16H26.4a1.1,1.1,0,0,1,.67.16,1.17,1.17,0,0,1,.32.65L30,12.39,32.88,1.25A1.39,1.39,0,0,1,33.22.6a1,1,0,0,1,.65-.16h1.54a.36.36,0,0,1,.41.41,1.36,1.36,0,0,1,0,.26,3.64,3.64,0,0,1-.12.41l-4,12.86a1.3,1.3,0,0,1-.35.65,1,1,0,0,1-.64.16H29.25a1,1,0,0,1-.67-.17,1.26,1.26,0,0,1-.32-.67L25.67,3.64,23.11,14.34a1.26,1.26,0,0,1-.32.67,1,1,0,0,1-.67.17Zm21.36.44a11.28,11.28,0,0,1-2.56-.29,7.44,7.44,0,0,1-1.92-.67,1,1,0,0,1-.61-.93v-.84q0-.52.38-.52a.9.9,0,0,1,.31.06l.42.17a8.77,8.77,0,0,0,1.83.58,9.78,9.78,0,0,0,2,.2,4.48,4.48,0,0,0,2.43-.55,1.76,1.76,0,0,0,.86-1.57,1.61,1.61,0,0,0-.45-1.16A4.29,4.29,0,0,0,43,9.22l-2.41-.76A5.15,5.15,0,0,1,38,6.78a3.94,3.94,0,0,1-.83-2.41,3.7,3.7,0,0,1,.45-1.85,4.47,4.47,0,0,1,1.19-1.37A5.27,5.27,0,0,1,40.51.29,7.4,7.4,0,0,1,42.6,0a8.87,8.87,0,0,1,1.12.07q.57.07,1.08.19t.95.26a4.27,4.27,0,0,1,.7.29,1.59,1.59,0,0,1,.49.41.94.94,0,0,1,.15.55v.79q0,.52-.38.52a1.76,1.76,0,0,1-.64-.2,7.74,7.74,0,0,0-3.2-.64,4.37,4.37,0,0,0-2.21.47,1.6,1.6,0,0,0-.79,1.48,1.58,1.58,0,0,0,.49,1.18,4.94,4.94,0,0,0,1.83.92L44.55,7a5.08,5.08,0,0,1,2.57,1.6A3.76,3.76,0,0,1,47.9,11a4.21,4.21,0,0,1-.44,1.93,4.4,4.4,0,0,1-1.21,1.47,5.43,5.43,0,0,1-1.85.93A8.25,8.25,0,0,1,42.05,15.62Z"></path><path class="cls-2" d="M45.19,23.81C39.72,27.85,31.78,30,25,30A36.64,36.64,0,0,1,.22,20.57c-.51-.46-.06-1.09.56-.74A49.78,49.78,0,0,0,25.53,26.4,49.23,49.23,0,0,0,44.4,22.53C45.32,22.14,46.1,23.14,45.19,23.81Z"></path><path class="cls-2" d="M47.47,21.21c-.7-.9-4.63-.42-6.39-.21-.53.06-.62-.4-.14-.74,3.13-2.2,8.27-1.57,8.86-.83s-.16,5.89-3.09,8.35c-.45.38-.88.18-.68-.32C46.69,25.8,48.17,22.11,47.47,21.21Z"></path></svg>
+
+</a>
+
+    </div>
+    
+        <div class="searchbox">
+    <label for="search-by"><i class="fas fa-search"></i></label>
+    <input data-search-input id="search-by" type="search" placeholder="Search...">
+    <span data-search-clear=""><i class="fas fa-times"></i></span>
+</div>
+
+<script type="text/javascript" src="/js/lunr.min.js?1657435499"></script>
+<script type="text/javascript" src="/js/auto-complete.js?1657435499"></script>
+<script type="text/javascript">
+    
+        var baseurl = "\/vi";
+    
+</script>
+<script type="text/javascript" src="/js/search.js?1657435499"></script>
+
+    
+  </div>
+
+    <div class="highlightable">
+    <ul class="topics">
+
+        
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/vi/1-build-phase/" title="Chuẩn bị tài nguyên" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/vi/1-build-phase/">
+          <b>1. </b>Chuẩn bị tài nguyên
+          
+            <i class="fas fa-check read-icon"></i>
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/vi/2-rds-phase/" title="Sử dụng trên RDS" class="dd-item 
+        parent
+        active
+        
+        ">
+      <a href="/vi/2-rds-phase/">
+          <b>2. </b>Sử dụng trên RDS
+          
+            <i class="fas fa-check read-icon"></i>
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/vi/3-fargate-phase/" title="Sử dụng trên Fargate" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/vi/3-fargate-phase/">
+          <b>3. </b>Sử dụng trên Fargate
+          
+            <i class="fas fa-check read-icon"></i>
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/vi/4-clean-up/" title="Dọn dẹp" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/vi/4-clean-up/">
+          <b>4. </b>Dọn dẹp
+          
+            <i class="fas fa-check read-icon"></i>
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+          
+         
+    </ul>
+
+    
+    
+      <section id="shortcuts">
+        <h3>More</h3>
+        <ul>
+          
+              <li> 
+                  <a class="padding" href="http://awsstudygroup.com"><i class='fab fa-aws'></i> AWS Study Group - Blog</a>
+              </li>
+          
+              <li> 
+                  <a class="padding" href="https://www.facebook.com/groups/660548818043427/"><i class='fab fa-facebook'></i> AWS Study Group - Nhóm FB</a>
+              </li>
+          
+        </ul>
+      </section>
+    
+
+    
+    <section id="prefooter">
+      <hr/>
+      <ul>
+      
+        <li>
+          <a class="padding">
+            <i class="fas fa-language fa-fw"></i>
+          <div class="select-style">
+            <select id="select-language" onchange="location = this.value;">
+          
+          
+          
+              
+              
+                  
+                    
+                    
+                      <option id="en" value="/2-rds-phase/">English</option>
+                    
+                  
+              
+                  
+              
+          
+              
+              
+                  
+              
+                  
+                    
+                    
+                      <option id="vi" value="/vi/2-rds-phase/" selected>Tiếng Việt</option>
+                    
+                  
+              
+          
+        </select>
+        <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+          width="255px" height="255px" viewBox="0 0 255 255" style="enable-background:new 0 0 255 255;" xml:space="preserve">
+          <g>
+            <g id="arrow-drop-down">
+              <polygon points="0,63.75 127.5,191.25 255,63.75 		" />
+            </g>
+          </g>
+        </svg>
+        </div>
+        </a>
+        </li>
+      
+      
+      
+        <li><a class="padding" href="#" data-clear-history-toggle=""><i class="fas fa-history fa-fw"></i> Clear History</a></li>
+      
+      </ul>
+    </section>
+    
+    <section id="footer">
+      <left>
+    
+     <b> Workshop</b> <br>
+    <img src="https://hitwebcounter.com/counter/counter.php?page=7830809&style=0038&nbdigits=9&type=page&initCount=0" title="Migrate" Alt="web counter"   border="0" /></a>  <br>
+     <b> <a href="https://cloudjourney.awsstudygroup.com/">Cloud Journey</a></b> <br>
+    <img src="https://hitwebcounter.com/counter/counter.php?page=7830807&style=0038&nbdigits=9&type=page&initCount=0" title="Total CLoud Journey" Alt="web counter"   border="0"   />
+     
+</left>
+<left>
+    <br>
+    <br>
+        <b> Last Updated </b> <br>
+        <i><font color=orange>06-07-2022</font></i>
+    </left>
+    <left>
+        <br>
+        <br>
+            <b> Team </b> <br>
+            <i> <a href="https://www.linkedin.com/in/jotaguy"  style="color:orange">Gia Hưng </a> <br>
+            <i> <a href="https://www.linkedin.com/in/binhbkitcse"  style="color:orange">Bình Nguyễn </a> <br>
+        </i>
+        </left>
+
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+    </section>
+  </div>
+</nav>
+
+
+
+
+        <section id="body">
+        <div id="overlay"></div>
+        <div class="padding highlightable">
+              
+              <div>
+                <div id="top-bar">
+                
+                
+                <div id="breadcrumbs" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                    <span id="sidebar-toggle-span">
+                        <a href="#" id="sidebar-toggle" data-sidebar-toggle="">
+                          <i class="fas fa-bars"></i>
+                        </a>
+                    </span>
+                  
+                  <span id="toc-menu"><i class="fas fa-list-alt"></i></span>
+                  
+                  <span class="links">
+                 
+                 
+                    
+          
+          
+            
+            
+          
+          
+            <a href='/vi/'>Sử dụng AWS Secrets Manager với Amazon RDS và AWS Fargate</a> > Sử dụng trên RDS
+          
+        
+          
+        
+                 
+                  </span>
+                </div>
+                
+                    <div class="progress">
+    <div class="wrapper">
+<nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+</div>
+
+                
+              </div>
+            </div>
+            
+        <div id="head-tags">
+        
+        </div>
+        
+        <div id="body-inner">
+          
+            <h1>
+              
+              Sử dụng trên RDS
+            </h1>
+          
+
+        
+
+
+
+	<p><strong>Sử dụng Secrets Manager tương tác với RDS</strong></p>
+<h4 id="tổng-quan">Tổng quan</h4>
+<p>Ở phần này, chúng ta sẽ tìm hiểu làm sao sử dụng dịch vụ <strong>AWS Secrets Manager</strong> nhằm thực hiện thay đổi password định kỳ cho RDS Database nội bộ.</p>
+<p><img src="/images/3-rds-phase-architecture.png?width=40pc" alt="rds-phase-architecture"></p>
+<p><strong>Nội dung</strong></p>
+<ul>
+<li><a href="#t%E1%BB%95ng-quan">Tổng quan</a></li>
+<li><a href="#b%E1%BA%A3o-m%E1%BA%ADt-rds-credential-v%E1%BB%9Bi-secret-manager">Bảo mật RDS Credential với Secret Manager</a></li>
+<li><a href="#truy-c%E1%BA%ADp-v%C3%A0o-rds-database">Truy cập vào RDS Database</a></li>
+<li><a href="#secret-rotation">Secret Rotation</a></li>
+<li><a href="#truy-c%E1%BA%ADp-rds-database-sau-khi-ho%C3%A0n-t%E1%BA%A5t-secret-rotation">Truy cập RDS Database sau khi hoàn tất Secret Rotation</a></li>
+</ul>
+<h4 id="bảo-mật-rds-credential-với-secret-manager">Bảo mật RDS Credential với Secret Manager</h4>
+<p>Chúng ta sẽ tiến hành lưu trữ các giá trị <strong>RDS Credential</strong> thông qua dịch vụ AWS Secret Manager.</p>
+<ol>
+<li>Truy cập vào dịch vụ <a href="https://us-east-1.console.aws.amazon.com/secretsmanager">Secrets Manager</a>.</li>
+</ol>
+<p><img src="/images/2/0001.png?featherlight=false&amp;width=90pc" alt="secrets-manager-console"></p>
+<ol start="2">
+<li>Chọn <code>Store a new secret</code>.</li>
+</ol>
+<p><img src="/images/2/0002.png?featherlight=false&amp;width=90pc" alt="secrets-manager-console"></p>
+<ol start="3">
+<li>Ở phần <em>Select secret type</em>, chọn nút <code>Credentials for RDS database</code>.
+<ol>
+<li>Ở ô <code>Username</code>: nhập giá trị của <strong>DBUser</strong>.</li>
+<li>Ở ô <code>Password</code>: nhập giá trị của <strong>DBPassword</strong>.</li>
+<li>Ở ô <code>Select the encryption key</code>, chọn <code>DefaultEncryptionKey</code>.</li>
+</ol>
+</li>
+<li>Ở phần <em>Select which RDS database this secret will access</em>, chọn RDS instance tương ứng với giá trị của <strong>DBInstance</strong>. Sau đó, chọn nút <code>Next</code>.</li>
+<li>Ở phần <em>Secret name and description</em> nhập tên và miêu tả. Sau đó, chọn nút <code>Next</code>.</li>
+</ol>
+<p><img src="/images/2/0003.png?featherlight=false&amp;width=90pc" alt="secrets-manager-console"></p>
+<ol start="6">
+<li>Ở phần <em>Configure automatic rotation</em>, chọn nút <code>Disable automatic rotation</code>. Sau đó, chọn nút <code>Next</code>.</li>
+</ol>
+<p><img src="/images/2/0004.png?featherlight=false&amp;width=90pc" alt="secrets-manager-console"></p>
+<ol start="7">
+<li>Ở phần <em>Review</em>, chọn nút <code>Store</code>.</li>
+</ol>
+<p><img src="/images/2/0005.png?featherlight=false&amp;width=90pc" alt="secrets-manager-console"></p>
+
+<div class="notices note" ><p>Với việc <strong>AWS SDK</strong> hỗ trợ nhiều ngôn ngữ, chúng ta có thể dễ dàng tích hợp Secrets Manager với ứng dụng hiện tại, ví dụ như <a href="https://docs.aws.amazon.com/code-samples/latest/catalog/code-catalog-javav2-example_code-secretsmanager.html">Java</a> hay <a href="https://docs.aws.amazon.com/code-samples/latest/catalog/code-catalog-python-example_code-secretsmanager.html">Python</a>.</p>
+</div>
+
+<p><img src="/images/2/0006.png?featherlight=false&amp;width=90pc" alt="secrets-manager-console"></p>
+<h4 id="truy-cập-vào-rds-database">Truy cập vào RDS Database</h4>
+<p>Bây giờ, chúng ta sẽ sử dụng <strong>Bastion Host</strong>, là nơi được phép truy cập vào RDS Database để thực thi các <em>shell scripts</em> đã được chuẩn bị.</p>
+<hr>
+<p><strong>Truy cập vào Bastion Host với Session Manager</strong></p>
+<ol>
+<li>Truy cập vào dịch vụ <a href="https://us-east-1.console.aws.amazon.com/systems-manager">Systems Manager</a></li>
+<li>Tại thanh điều hướng bên tay trái, chọn <strong>Session Manager</strong>.</li>
+</ol>
+<p><img src="/images/2/0007.png?featherlight=false&amp;width=90pc" alt="secrets-manager-console"></p>
+<ol start="3">
+<li>Nhấn nút <code>Start Session</code>.</li>
+<li>Chọn EC2 instance tương ứng với giá trị <strong>BastionIP</strong> và nhấn nút <code>Start Session</code>.</li>
+</ol>
+<p><img src="/images/2/0008.png?featherlight=false&amp;width=90pc" alt="secrets-manager-console"></p>
+<ol start="5">
+<li>Ở thanh cửa sổ mới, chúng ta sẽ tiến hành chạy các lệnh cần thiết.</li>
+</ol>
+
+<div class="notices info" ><p>Trước khi chạy các scripts, chúng ta cần đảm bảo tài khoản được sử dụng là <code>ec2-user</code>.</p>
+</div>
+
+<p>Tiến hành chuyển qua tài khoản <code>ec2-user</code> bằng câu lệnh sau:</p>
+<pre tabindex="0"><code>sudo su - ec2-user
+</code></pre><p><img src="/images/2/0009.png?featherlight=false&amp;width=90pc" alt="secrets-manager-console"></p>
+<hr>
+<p><strong>Thực thi các Shell Scripts</strong></p>
+<ol>
+<li>Tìm kiếm các <em>shell scripts</em> được chuẩn bị sẵn.</li>
+<li>Sẽ có 2 <em>shell scripts</em> được chuẩn bị sẵn.
+<ol>
+<li><code>mysql.oldway.sh</code>: đoạn mã này dùng để truy cập vào RDS database thông qua cách cũ - <code>hard-coded password</code>.</li>
+<li><code>mysql.newway.sh</code>: đoạn mã này dùng để truy cập vào RDS database thôgn qua cách mới - <code>Secrets Manager</code>.</li>
+</ol>
+</li>
+</ol>
+<p><img src="/images/2/00010.png?featherlight=false&amp;width=90pc" alt="secrets-manager-console"></p>
+<p>Đối với <code>mysql.oldway.sh</code>, nội dung bên trong đoạn mã sẽ tương tự như sau, trong đó các giá trị sau sẽ được điền sẵn.</p>
+<ul>
+<li>PASSWORD</li>
+<li>USER</li>
+<li>ENDPOINT</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e">#/bin/bash</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># mysql.oldway.sh</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># This is the old way of accessing a database, with a hard-coded password.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># This script will only work right after the CloudFormation template runs.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># After you store and rotate the secret, you will need to use the</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># mysql.newway.sh script.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>mysql <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-pPASSWORD <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-u USER <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-P <span style="color:#ae81ff">3306</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-h ENDPOINT
+</span></span></code></pre></div><ol>
+<li>Chúng ta tiến hành thực thi <code>mysql.oldway.sh</code> để truy cập vào RDS Database.
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>./mysql.oldway.sh
+</span></span></code></pre></div></li>
+</ol>
+<p><img src="/images/2/00011.png?featherlight=false&amp;width=90pc" alt="secrets-manager-console"></p>
+<ol start="2">
+<li>
+<p>Sau đó, thực thi các câu lệnh SQL để kiểm tra dữ liệu hiện có.</p>
+<pre tabindex="0"><code>use smdemo;
+show tables;
+select * from bookinfo;
+quit;
+</code></pre></li>
+<li>
+<p>Kết quả sẽ tương tự như sau.</p>
+</li>
+</ol>
+<p><img src="/images/2/00012.png?featherlight=false&amp;width=90pc" alt="secrets-manager-console"></p>
+<p>Đối với <code>mysql.newway.sh</code>, nội dung bên trong đoạn mã sẽ tương tự như sau.</p>
+<ul>
+<li>Hàm <em>getsecretvalue()</em> được dùng để lấy RDS Credential được lưu trữ tại dịch vụ <strong>Secrets Manager</strong> ở bước trước, sau đó gán cho argument <code>$1</code>.</li>
+<li>Lần lượt gán các giá trị liên quan từ kết quả trả về của hàm <em>getsecretvalue()</em>.</li>
+<li>Thực hiện kết nối tới RDS database thông qua lệnh <code>mysql</code>.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>getsecretvalue<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>  aws secretsmanager get-secret-value --secret-id $1 | <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    jq .SecretString | <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    jq fromjson
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>secret<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>getsecretvalue $1<span style="color:#e6db74">`</span>
+</span></span><span style="display:flex;"><span>user<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo $secret | jq -r .username<span style="color:#66d9ef">)</span>
+</span></span><span style="display:flex;"><span>password<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo $secret | jq -r .password<span style="color:#66d9ef">)</span>
+</span></span><span style="display:flex;"><span>endpoint<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo $secret | jq -r .host<span style="color:#66d9ef">)</span>
+</span></span><span style="display:flex;"><span>port<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo $secret | jq -r .port<span style="color:#66d9ef">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>mysql <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-p$password <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-u $user <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-P $port <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-h $endpoint
+</span></span></code></pre></div>
+<div class="notices info" ><p>Giá trị trả về của hàm <em>getsecretvalue()</em> là một <strong>JSON String</strong>.</p>
+</div>
+
+<p>Kết quả sẽ tương tự như sau:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;engine&#34;</span>: <span style="color:#e6db74">&#34;mysql&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;username&#34;</span>: <span style="color:#e6db74">&#34;myuser&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;password&#34;</span>: <span style="color:#e6db74">&#34;mypassword&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;host&#34;</span>: <span style="color:#e6db74">&#34;my-database-endpoint.us-east-1.rds.amazonaws.com&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;dbname&#34;</span>: <span style="color:#e6db74">&#34;myDatabase&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;port&#34;</span>: <span style="color:#e6db74">&#34;3306&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ol>
+<li>Chúng ta tiến hành thực thi <code>mysql.newway.sh</code> để truy cập vào RDS Database.
+<pre tabindex="0"><code>./mysql.newway.sh &lt;SECRET_NAME&gt;
+</code></pre></li>
+<li>Sau đó, thực thi các câu lệnh SQL để kiểm tra dữ liệu hiện có.
+<pre tabindex="0"><code>use smdemo;
+show tables;
+select * from bookinfo;
+quit;
+</code></pre></li>
+<li>Kết quả sẽ tương tự như sau.</li>
+</ol>
+<p><img src="/images/2/00012.png?featherlight=false&amp;width=90pc" alt="secrets-manager-console"></p>
+<h4 id="secret-rotation">Secret Rotation</h4>
+<p>Sau khi đã truy cập vào RDS Database thông qua cả 2 cách, chúng ta sẽ tiến hành quá trình <strong>Secret Rotation</strong>. Đây là một quá trình định kỳ nhằm tuân thủ các quy tắc bảo mật.</p>
+<ol>
+<li>Truy cập vào dịch vụ <a href="https://console.aws.amazon.com/secretsmanager">Secrets Manager</a>.</li>
+<li>Chọn <em>Secret</em> mà chúng ta đã tạo ở bước trước.</li>
+<li>Nhấn nút <code>Edit rotation</code>.</li>
+</ol>
+<p><img src="/images/3-secrets-manager-edit-rotation.png" alt="secrets-manager-edit-rotation"></p>
+<ol start="4">
+<li>Chọn <code>Enable automatic rotation</code>.</li>
+</ol>
+<p><img src="/images/3-secrets-manager-edit-rotation-config.png" alt="secrets-manager-edit-rotation-config"></p>
+<ol start="5">
+<li>Ở mục <em>Select rotation interval</em>, chọn giá trị là <strong>30 days</strong>.</li>
+<li>Ở mục <em>New AWS Lambda function name</em>, nhập giá trị là <strong>smdemo</strong>.</li>
+<li>Ở mục <em>Select which secret will be used to perform the rotation</em>, chọn <code>Use this secret</code>.</li>
+<li>Nhấn nút <code>Save</code>.</li>
+<li>Sẽ có một tin nhắn tương tự như sau khi quá trình <strong>Secret Rotation</strong> bắt đầu.</li>
+</ol>
+<p><img src="/images/3-secrets-manager-rotation-enabling.png" alt="secrets-manager-rotation-enabling"></p>
+<ol start="10">
+<li>Khi quá trình <strong>Secret Rotation</strong> hoàn tất, tin nhắn như sau sẽ xuất hiện.</li>
+</ol>
+<p><img src="/images/3-secrets-manager-rotation-enabled.png" alt="secrets-manager-rotation-enabled"></p>
+<ol start="11">
+<li>Để lấy được giá trị mới của <em>Secret</em>, nhấn nút <code>Retrieve secret value</code>.</li>
+</ol>
+
+<div class="notices note" ><p>Secrets Manager sẽ sử dụng <a href="https://aws.amazon.com/serverless/serverlessrepo/">AWS Severless Application Repository</a> để cài đặt Lambda Function.</p>
+</div>
+
+<h4 id="truy-cập-rds-database-sau-khi-hoàn-tất-secret-rotation">Truy cập RDS Database sau khi hoàn tất Secret Rotation</h4>
+<p>Sau khi đã hoàn tất quá trình <strong>Key Rotation</strong>, thông qua 2 cách truy cập cũ và mới, chúng ta lần lượt truy cập vào RDS Database và quan sát kết quả.</p>
+<p>Đối với <code>mysql.oldway.sh</code>, kết quả sẽ như sau:
+<img src="/images/3-shell-mysql-old-access-denied.png" alt="shell-mysql-old-access-denied"></p>
+<p>Đối với <code>mysql.newway.sh</code>, kết quả sẽ như sau:
+<img src="/images/3-shell-mysql-new-after-rotation.png" alt="shell-mysql-new-after-rotation"></p>
+<p>Đối với cách cũ, bởi vì chúng ta đã sử dụng <code>hard-coded password</code> nên khi password bị thay đổi, lỗi sẽ xuất hiện và ngăn cản tác vụ truy cập. Đối với cách mới, thông qua dịch vụ <strong>Secrets Manager</strong>, chúng ta có thể dễ dàng truy cập vào RDS Database trước và sau quá trình <strong>Key Rotation</strong>.</p>
+
+
+
+
+
+<footer class=" footline" >
+	
+</footer>
+
+        
+        </div> 
+        
+
+      </div>
+
+    <div id="navigation">
+        
+        
+        
+        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                        
+                        
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                        
+                        
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+        
+        
+
+
+	 
+	 
+		
+			<a class="nav nav-prev" href="/vi/1-build-phase/" title="Chuẩn bị tài nguyên"> <i class="fa fa-chevron-left"></i></a>
+		
+		
+			<a class="nav nav-next" href="/vi/3-fargate-phase/" title="Sử dụng trên Fargate" style="margin-right: 0px;"><i class="fa fa-chevron-right"></i></a>
+		
+	
+    </div>
+
+    </section>
+    
+    <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
+      <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
+    </div>
+    <script src="/js/clipboard.min.js?1657435499"></script>
+    <script src="/js/perfect-scrollbar.min.js?1657435499"></script>
+    <script src="/js/perfect-scrollbar.jquery.min.js?1657435499"></script>
+    <script src="/js/jquery.sticky.js?1657435499"></script>
+    <script src="/js/featherlight.min.js?1657435499"></script>
+    <script src="/js/highlight.pack.js?1657435499"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script src="/js/modernizr.custom-3.6.0.js?1657435499"></script>
+    <script src="/js/learn.js?1657435499"></script>
+    <script src="/js/hugo-learn.js?1657435499"></script>
+
+    <link href="/mermaid/mermaid.css?1657435499" rel="stylesheet" />
+    <script src="/mermaid/mermaid.js?1657435499"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-158079754-2', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  </body>
+</html>
