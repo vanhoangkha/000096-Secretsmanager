@@ -1,6 +1,6 @@
 ---
 title : "Sử dụng AWS Secrets Manager với Amazon RDS và AWS Fargate"
-date :  "`r Sys.Date()`" 
+date: 2024-01-01
 weight : 1
 chapter : false
 ---
