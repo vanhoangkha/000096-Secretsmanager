@@ -1,4 +1,4 @@
-# 🔑 Secrets Manager
+# Secrets Manager
 
 Manage secrets and credentials securely with AWS Secrets Manager.
 
@@ -8,7 +8,7 @@ This is a hands-on workshop from the **AWS First Cloud Journey** series.
 
 ## Workshop
 
-📖 **[Start the workshop](https://vanhoangkha.github.io/000096-Secretsmanager/)**
+**[Start the workshop](https://vanhoangkha.github.io/000096-Secretsmanager/)**
 
 ## Prerequisites
 
